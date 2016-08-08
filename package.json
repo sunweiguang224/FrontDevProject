@@ -1,5 +1,5 @@
 {
-  "name": "DevFramework",
+  "name": "FrontDevProject",
   "version": "1.0.0",
   "description": "利用Node.js平台搭建工程化前端项目。",
   "main": "index.js",
@@ -51,5 +51,8 @@
     "tmodjs-loader": "^1.0.1",
     "url-loader": "^0.5.7",
     "webpack-stream": "^3.2.0"
+  },
+  "dependencies": {
+    "gulp-file-include": "^0.14.0"
   }
 }

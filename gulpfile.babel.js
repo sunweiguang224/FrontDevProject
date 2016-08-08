@@ -27,6 +27,7 @@ import	fs from 'fs';		// 文件操作模块
 import	moment from 'moment';		// 时间格式化
 import	inquirer from 'inquirer';		// 控制台接收输入
 import	babel from 'gulp-babel';		// es6编译
+import	fileInclude from 'gulp-file-include';		// 为html引入tpl模板
 
 
 // ************************************ 变量Path ************************************
@@ -75,8 +76,12 @@ function compileHtml(env){
 		min = '.min';
 	}
 	return gulp.src(Path.src.html)
-		.pipe(replace('${{meta}}', meta))
-		.pipe(replace('${{remRootSize}}', remRootSize))
+		//.pipe(replace('${{meta}}', meta))
+		//.pipe(replace('${{remRootSize}}', remRootSize))
+		.pipe(fileInclude({
+			prefix: '@@',
+			basepath: __dirname + '/src/util/tpl/'
+		}))
 		.pipe(replace('${{prefix}}', '../..'))
 		.pipe(replace('${{suffix}}', 'v=' + v))
 		.pipe(replace('${{min}}', min));
@@ -177,10 +182,7 @@ gulp.task('task_js_dist', () => {
 gulp.task('default', [], () => {
 	runSequence(
 		'task_clean_dev',
-		'task_html_dev',
-		'task_css_dev',
-		'task_img_dev',
-		'task_js_dev',
+		['task_html_dev', 'task_css_dev', 'task_img_dev', 'task_js_dev'],
 		function(){
 			console.log('>>>>>>>>>>>>>>> gulp全部任务执行完毕。' + getNow());
 			// 开启liveReload
@@ -211,10 +213,7 @@ gulp.task('default', [], () => {
 gulp.task('build', [], () => {
 	runSequence(
 		'task_clean_dist',
-		'task_html_dist',
-		'task_css_dist',
-		'task_img_dist',
-		'task_js_dist',
+		['task_html_dist', 'task_css_dist', 'task_img_dist', 'task_js_dist'],
 		function(){
 			console.log('>>>>>>>>>>>>>>> gulp全部任务执行完毕。' + getNow());
 		}

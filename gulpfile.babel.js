@@ -32,8 +32,8 @@ import	fileInclude from 'gulp-file-include';		// 为html引入tpl模板
 
 /* 获取当前格式化时间 */
 function getNow(){
-	var m = moment();
-	return m.format("YYYY-MM-DD HH:mm:ss ") + m.millisecond();
+	var mt = moment();
+	return mt.format("YYYY-MM-DD HH:mm:ss ") + mt.millisecond();
 }
 
 // ************************************ 编译目录清理 ************************************
@@ -47,38 +47,31 @@ gulp.task('task_clean_dist', () => {
 });
 
 // ************************************ 编译HTML ************************************
-function compileHtml(env){
+function compileHtml(options){
 	console.log('>>>>>>>>>>>>>>> html文件开始编译。' + getNow());
-	let meta = fs.readFileSync('./src/util/tpl/meta.tpl', "utf8");
-	let remRootSize = fs.readFileSync('./src/util/tpl/remRootSize.tpl', "utf8");
-	let v = moment().format("YYYY-MM-DD_HH:mm:ss");
-	let min = null;
-	if(env == 'dev'){
-		min = '';
-	}else if(env == 'dist'){
-		min = '.min';
-	}
 	return gulp.src(Path.src.html)
-		//.pipe(replace('${{meta}}', meta))
-		//.pipe(replace('${{remRootSize}}', remRootSize))
 		.pipe(fileInclude({
 			prefix: '@@',
 			basepath: __dirname + '/src/util/tpl/'
 		}))
-		.pipe(replace('${{prefix}}', '../..'))
-		.pipe(replace('${{suffix}}', 'v=' + v))
-		.pipe(replace('${{min}}', min));
+		.pipe(replace('@@{{prefix}}', '../..'))
+		.pipe(replace('@@{{min}}', options.compress))
+		.pipe(replace('@@{{suffix}}', 'v=' + getNow()));
 }
 gulp.task('task_html_dev', () => {
-	return compileHtml('dev')
+	return compileHtml({
+			compress: ''
+		})
 		.pipe(gulp.dest(Path.devRoot))
-		.pipe(liveReload());
+		.pipe(liveReload())
 });
 gulp.task('task_html_dist', () => {
-	return compileHtml('dist')
+	return compileHtml({
+			compress: '.min'
+		})
 		.pipe(minifyHtml())
 		.pipe(gulp.dest(Path.distRoot))
-		.pipe(size({showFiles: true}));
+		.pipe(size({showFiles: true}))
 });
 
 // ************************************ 编译CSS ************************************
@@ -123,7 +116,7 @@ gulp.task('task_img_dist', () => {
 });
 
 // ************************************ 编译JS ************************************
-function compileJs(env){
+function compileJs(){
 	console.log('>>>>>>>>>>>>>>> js文件开始编译。' + getNow());
 	let webpackConfig = require("./webpack.config.js");
 	return gulp.src('')
@@ -134,30 +127,29 @@ function compileJs(env){
 		.pipe(header('\/* This css was compiled at '+ getNow() +'. *\/\n'));
 }
 gulp.task('task_js_dev', () => {
-	gulp.src(Path.src.js.common)
-		.pipe(gulp.dest(Path.devRoot+'/common/'));
-	return compileJs('dev')
-		.pipe(gulp.dest(Path.devRoot))
-		.pipe(liveReload());
+	function deployDev(stream){
+		return stream.pipe(gulp.dest(Path.devRoot))
+			.pipe(liveReload());
+	}
+	// common部分的js
+	deployDev(gulp.src(Path.src.js.common));
+	// module部分的js
+	return deployDev(compileJs());
 });
 gulp.task('task_js_dist', () => {
-	gulp.src(Path.src.js.common)
-		.pipe(uglify({
-			mangle: true,  // 类型：Boolean 默认：true 是否修改变量名
-			compress: true,  // 类型：Boolean 默认：true 是否完全压缩
-			preserveComments: 'none'  // all保留所有注释
-		}))
-		.pipe(rename({suffix: '.min'}))
-		.pipe(gulp.dest(Path.distRoot+'/common/'));
-	return compileJs('dist')
-		.pipe(uglify({
-			mangle: true,  // 类型：Boolean 默认：true 是否修改变量名
-			compress: true,  // 类型：Boolean 默认：true 是否完全压缩
-			preserveComments: 'none'  // all保留所有注释
-		}))
-		.pipe(rename({suffix: '.min'}))
-		.pipe(gulp.dest(Path.distRoot))
-		.pipe(size({showFiles: true}));
+	function deployDist(stream){
+		return stream.pipe(uglify({
+				mangle: true,  // 类型：Boolean 默认：true 是否修改变量名
+				compress: true,  // 类型：Boolean 默认：true 是否完全压缩
+				preserveComments: 'none'  // all保留所有注释
+			}))
+			.pipe(rename({suffix: '.min'}))
+			.pipe(gulp.dest(Path.distRoot));
+	}
+	// common部分的js
+	deployDist(gulp.src(Path.src.js.common));
+	// module部分的js
+	return deployDist(compileJs());
 });
 
 // ************************************ 文件编译+监听(npm start) ************************************
@@ -243,7 +235,7 @@ gulp.task('create', () => {
 		}
 	]).then((answer) => {
 		console.log(answer);
-		var distDir = Path.srcRoot + '/module/'+answer.module,
+		var newModulePath = Path.srcRoot + '/module/'+answer.module,
 			file = answer.file || answer.module;
 		gulp.src(Path.src.generator)
 			.pipe(rename({
@@ -254,9 +246,9 @@ gulp.task('create', () => {
 			.pipe(replace('${{title}}', answer.title))
 			.pipe(replace('${{desc}}', answer.desc))
 			.pipe(replace('${{author}}', answer.author))
-			.pipe(gulp.dest(distDir))
+			.pipe(gulp.dest(newModulePath))
 			.on('end', function(){
-				fs.mkdir('./'+distDir + '/img')
+				fs.mkdir(newModulePath + '/img')
 			})
 		;
 		console.log('>>>>>>>>>>>>>>> '+answer.module+'模块'+file+'文件创建完毕。' + getNow());

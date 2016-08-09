@@ -5,6 +5,7 @@
  * 前提需要先安装babel-core、babel-preset-es2015、babel-preset-stage-0
  */
 // 引入组件
+import Path from './path.js';
 import gulp from 'gulp';
 //$ = require('gulp-load-plugins')(),		//插件加载器，启动加载devDependencies中所有插件
 import	uglify from 'gulp-uglify';		// js压缩混淆
@@ -28,24 +29,6 @@ import	moment from 'moment';		// 时间格式化
 import	inquirer from 'inquirer';		// 控制台接收输入
 import	babel from 'gulp-babel';		// es6编译
 import	fileInclude from 'gulp-file-include';		// 为html引入tpl模板
-
-
-// ************************************ 变量Path ************************************
-const Path = {
-	srcRoot: 'src',
-	devRoot: 'dev',
-	distRoot: 'dist'
-};
-Path.src = {
-	css: Path.srcRoot + '/*(module|common)/**/css/*.scss',
-	js: Path.srcRoot + '/common/**/js/*.js',	// common由nodejs负责，module由webpack负责
-	img: Path.srcRoot + '/*(module|common)/**/img/*',
-	html: Path.srcRoot + '/*(module|common)/**/*.html',
-	generator: [
-		'src/generator/*.html',
-		'src/generator/*/*'
-	]
-};
 
 /* 获取当前格式化时间 */
 function getNow(){
@@ -151,14 +134,14 @@ function compileJs(env){
 		.pipe(header('\/* This css was compiled at '+ getNow() +'. *\/\n'));
 }
 gulp.task('task_js_dev', () => {
-	gulp.src(Path.src.js)
+	gulp.src(Path.src.js.common)
 		.pipe(gulp.dest(Path.devRoot+'/common/'));
 	return compileJs('dev')
 		.pipe(gulp.dest(Path.devRoot))
 		.pipe(liveReload());
 });
 gulp.task('task_js_dist', () => {
-	gulp.src(Path.src.js)
+	gulp.src(Path.src.js.common)
 		.pipe(uglify({
 			mangle: true,  // 类型：Boolean 默认：true 是否修改变量名
 			compress: true,  // 类型：Boolean 默认：true 是否完全压缩
@@ -201,7 +184,7 @@ gulp.task('default', [], () => {
 				Path.srcRoot + '/util/**/*.img'
 			], ['task_img_dev']);
 			gulp.watch([
-				Path.src.js,
+				Path.src.js.common,
 				Path.srcRoot + '/util/**/*.js',
 				Path.srcRoot + '/module/**/*.js'
 			], ['task_js_dev']);

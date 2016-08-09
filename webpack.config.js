@@ -1,10 +1,10 @@
 /**
  * Created by weiguangsun on 2016/4/20.
  */
+import Path from './path.js';
 import fs from 'fs';
 import webpack from 'webpack';
 import glob from 'glob';
-
 
 //export default {		// 有bug 原因不明
 module.exports = {
@@ -29,7 +29,7 @@ module.exports = {
 		entry.common = ['templateHelper', 'jQuery', 'util'/*, 'swg', 'sizzle'*/, 'ua'];
 		console.log(entry);
 		return entry;
-	}('src/module/*/js/*.js'),
+	}(Path.src.js.module),
 	output: {
 		//path: __dirname + '/.build/js',	//__dirname 是当前模块文件所在目录的完整绝对路径
 		//publicPath: '../../js/',		//网站运行时的访问路径 未知

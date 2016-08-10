@@ -19,21 +19,22 @@ module.exports = {
 			swg: __dirname + '/src/util/js/swg.js'
 		}
 	},
-	entry: function entries(regexPath) {
-		var files = glob.sync(regexPath);
-		var entry = {}, filePath;
+	entry: function(path) {
+		var entry = {
+			common: ['jQuery', /*'sizzle', */'templateHelper', 'util', /*'swg', */'ua']		// JS工具
+		};
+		var files = glob.sync(path);
 		for (var i = 0; i < files.length; i++) {
-			filePath = './' + files[i];
-			entry[filePath.replace('./src/', '').replace('.js', '.bundle.js')] = filePath;		// entry名即为发布路径
+			var filePath = './' + files[i];		// 读取文件路径
+			var moduleName = filePath.replace('./'+Path.srcRoot+'/', '').replace('.js', '');	// 文件编译后路径
+			entry[moduleName] = filePath;
 		}
-		entry.common = ['templateHelper', 'jQuery', 'util'/*, 'swg', 'sizzle'*/, 'ua'];
-		console.log(entry);
 		return entry;
 	}(Path.src.js.module),
 	output: {
 		//path: __dirname + '/.build/js',	//__dirname 是当前模块文件所在目录的完整绝对路径
 		//publicPath: '../../js/',		//网站运行时的访问路径 未知
-		filename: "[name]"
+		filename: "[name].bundle.js"
 	},
 	module: {
 		loaders: [

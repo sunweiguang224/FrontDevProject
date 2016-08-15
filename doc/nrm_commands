@@ -1,0 +1,19 @@
+```bash
+npm install -g nrm
+
+安装完毕后, 增加 内部源
+
+API:
+ls                           List all the registries
+use <registry>               Change registry to registry
+add <registry> <url> [home]  Add one custom registry
+del <registry>               Delete one custom registry
+home <registry> [browser]    Open the homepage of registry with optional browser
+test [registry]              Show the response time for one or all registries
+help                         Print this help
+
+例子:
+nrm add newssdk http://10.0.68.202:4873/
+
+nrm use newwsdk
+```

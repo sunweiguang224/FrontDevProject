@@ -5,12 +5,19 @@
  */
 var templateHelper = require('templateHelper');
 var util = require('util');
+//var fff = require('jquery');
+var swg = require('swg-js');
+debugger
 
 function Biz() {
-	var $body = $('body');
-	//var tpl = require('../tpl/demo.tpl')({a: Date.now()});
+	//var bk = require('../../../../node_modules/ui-backflow/dist/js/backflow.js');
+  var ffff = require('../../../../node_modules/ui-swiper/js/swiper.js');
+  var wef = require('ui-swiper');
+	//var ffff = require('../../../../node_modules/ui-swiper/css/swiper.css');
+  debugger
+  //alert(bk);
 	//var css = require('../css/demo.scss');
 	//var json = require('../json/demo.json');
-
+  alert(1)
 }
 new Biz();

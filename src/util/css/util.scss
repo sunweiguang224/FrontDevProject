@@ -6,10 +6,10 @@ $containerMinWidth: 320px;
 
 /*
   功能：文本溢出显示省略号
-  @param {number} $line-clamp 文本行数.
+  @param {number} $line 文本行数.
 */
-@mixin ellipsis($line-clamp: 1) {
-  @if($line-clamp == 1){
+@mixin ellipsis($line: 1) {
+  @if($line == 1){
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -18,6 +18,49 @@ $containerMinWidth: 320px;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: $line-clamp;
+    -webkit-line-clamp: $line;
+  }
+}
+/*
+  功能：正方形
+  @param {number} $length 边长.
+*/
+@mixin square($length) {
+  width: $length;
+  height: $length;
+}
+/*
+  功能：圆形
+  @param {number} $length 边长.
+*/
+@mixin circle($radius) {
+  @include square($radius * 2);
+  border-radius: $radius;
+}
+/*
+  功能：单行文本垂直居中
+  @param {number} $height 高度.
+*/
+@mixin height($height){
+  height: $height;
+  line-height: $height;
+}
+/*
+  功能：盒阴影
+  @param {number} $h 水平距离.
+  @param {number} $v 垂直距离.
+  @param {number} $blur 模糊距离.
+  @param {number} $color 阴影颜色.
+*/
+@mixin box-shadow($h:1px, $v:1px, $blur:1px, $color:black){
+  box-shadow: $h $v $blur $color;
+}
+/*
+  功能：点击动效
+  @param {number} $selector 选择器.
+*/
+@mixin click-effect($selector){
+  #{$selector}:active{
+    opacity: 0.8;
   }
 }

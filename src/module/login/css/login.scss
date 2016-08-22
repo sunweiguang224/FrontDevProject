@@ -1,0 +1,13 @@
+@charset "UTF-8";
+@import '../../../util/css/util';
+@import '_icon';
+
+.g-container{
+  a{
+    display: inline-block;
+    width: $coupon-width;
+    height: $coupon-height;
+    background: $coupon-bg-image  $coupon-bg-position no-repeat;
+    background-size: $coupon-bg-size;
+  }
+}

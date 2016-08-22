@@ -53,6 +53,8 @@
     "webpack-stream": "^3.2.0"
   },
   "dependencies": {
-    "gulp-file-include": "^0.14.0"
+    "gulp-file-include": "^0.14.0",
+    "gulp.spritesmith": "^6.2.1",
+    "swg-js": "^1.0.0"
   }
 }

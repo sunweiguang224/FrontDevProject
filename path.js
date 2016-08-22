@@ -6,10 +6,11 @@ const Path = {
 };
 Path.src = {
 	css: Path.srcRoot + '/*(module|common)/**/css/*.scss',
-	img: Path.srcRoot + '/*(module|common)/**/img/*',
-	html: Path.srcRoot + '/*(module|common)/**/*.html',
+	icon: Path.srcRoot + '/*(module)/*/img/*/*', // common模块下图片是公用的，页面之间可以利用缓存，故不作处理
+	img: Path.srcRoot + '/*(module|common)/**/img/{*.png, *.jpg}',//
+	html: Path.srcRoot + '/*(module)/*/*.html',
 	js: {
-		common: Path.srcRoot + '/*common/**/js/*.js',	// 由nodejs负责
+		common: Path.srcRoot + '/*common/js/*.js',	// 由nodejs负责
 		module: Path.srcRoot + '/*module/*/js/*.js'		// 由webpack负责
 	},
 	generator: [

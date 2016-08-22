@@ -29,6 +29,10 @@ import	moment from 'moment';		// 时间格式化
 import	inquirer from 'inquirer';		// 控制台接收输入
 import	babel from 'gulp-babel';		// es6编译
 import	fileInclude from 'gulp-file-include';		// 为html引入tpl模板
+import	spritesmith from 'gulp.spritesmith';		// 雪碧图
+import	glob from 'glob';		// 路径匹配
+import	mergeStream from 'merge-stream';		// 合并流然后返回给run-sequence保证任务顺序执行
+import	path from 'path';		// 路径解析模块
 
 /* 获取当前格式化时间 */
 function getNow(){
@@ -98,6 +102,31 @@ gulp.task('task_css_dist', () => {
 		.pipe(size({showFiles: true}));
 });
 
+// ************************************ 合成雪碧图+生成scss ************************************
+gulp.task('task_sprite', () => {
+  console.log('>>>>>>>>>>>>>>> 开始合成雪碧图。' + getNow());
+  //var dirs = fs.readdirSync(Path.src.sprite);
+  var merged = mergeStream();
+  var iconDirs = glob.sync(path.normalize(Path.src.icon + '/..'));
+  iconDirs.forEach(function(iconDir){
+    console.log(iconDir)
+    if(fs.statSync(iconDir).isDirectory()){
+      var baseName = iconDir.substring(iconDir.lastIndexOf('/') + 1);
+      var stream = gulp.src(iconDir + '/*')
+        .pipe(spritesmith({
+          cssTemplate: './spritesmith.css.hbs',
+          padding: 10,
+          layout: 'top-down',
+          imgName: baseName + '.png',
+          cssName: '_' + baseName + '.scss',
+        }));
+      merged.add(stream.img.pipe(gulp.dest(iconDir + '/..')));
+      merged.add(stream.css.pipe(gulp.dest(iconDir + '/../../css/')));
+    }
+  });
+  return merged;  // 保证顺序执行
+});
+
 // ************************************ 编译图片 ************************************
 function compileImg(){
 	console.log('>>>>>>>>>>>>>>> 图片文件开始编译。' + getNow());
@@ -157,24 +186,34 @@ gulp.task('task_js_dist', () => {
 gulp.task('default', [], () => {
 	runSequence(
 		'task_clean_dev',
-		['task_html_dev', 'task_css_dev', 'task_img_dev', 'task_js_dev'],
+    'task_sprite',
+    ['task_html_dev', 'task_css_dev', 'task_img_dev', 'task_js_dev'],
 		function(){
 			console.log('>>>>>>>>>>>>>>> gulp全部任务执行完毕。' + getNow());
 			// 开启liveReload
 			liveReload.listen();
-			// 开始监视
+			// 监视html变化
 			gulp.watch([
 				Path.src.html,
 				Path.srcRoot + '/util/**/*.html'
 			], ['task_html_dev']);
+      // 监视css变化
 			gulp.watch([
 				Path.src.css,
 				Path.srcRoot + '/util/**/css/*.scss'
 			], ['task_css_dev']);
+      // 监视图片变化
 			gulp.watch([
 				Path.src.img,
 				Path.srcRoot + '/util/**/*.img'
 			], ['task_img_dev']);
+      // 监视图标变化
+			gulp.watch([
+				Path.src.icon
+			], function(){
+        runSequence('task_sprite', ['task_css_dev', 'task_img_dev'])
+      });
+      // 监视js变化
 			gulp.watch([
 				Path.src.js.common,
 				Path.srcRoot + '/util/**/*.js',
@@ -188,6 +227,7 @@ gulp.task('default', [], () => {
 gulp.task('build', [], () => {
 	runSequence(
 		'task_clean_dist',
+    'task_sprite',
 		['task_html_dist', 'task_css_dist', 'task_img_dist', 'task_js_dist'],
 		function(){
 			console.log('>>>>>>>>>>>>>>> gulp全部任务执行完毕。' + getNow());
@@ -206,32 +246,32 @@ gulp.task('create', () => {
 			validate: function (input) {
 				return input ? true : false;
 			}
-		},{
+		}/*,{
 			type: 'input',
 			name: 'file',
 			message: 'please input file\'s name ?'
-		},{
+		}*/,{
 			type: 'input',
 			name: 'title',
 			message: 'please input page\'s title ?',
-			validate: function (input) {
-				return input ? true : false;
-			}
+			//validate: function (input) {
+			//	return input ? true : false;
+			//}
 		},{
 			type: 'input',
 			name: 'desc',
 			message: 'please input module\'s description ?',
-			validate: function (input) {
-				return input ? true : false;
-			}
+			//validate: function (input) {
+			//	return input ? true : false;
+			//}
 		},{
 			type: 'input',
 			name: 'author',
 			message: 'please input your name ?',
 			default: 'swg',
-			validate: function (input) {
-				return input ? true : false;
-			}
+			//validate: function (input) {
+			//	return input ? true : false;
+			//}
 		}
 	]).then((answer) => {
 		console.log(answer);
@@ -248,7 +288,8 @@ gulp.task('create', () => {
 			.pipe(replace('${{author}}', answer.author))
 			.pipe(gulp.dest(newModulePath))
 			.on('end', function(){
-				fs.mkdir(newModulePath + '/img')
+				fs.mkdir(newModulePath + '/img');
+				fs.mkdir(newModulePath + '/img/icon');
 			})
 		;
 		console.log('>>>>>>>>>>>>>>> '+answer.module+'模块'+file+'文件创建完毕。' + getNow());

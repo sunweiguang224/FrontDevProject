@@ -4,10 +4,6 @@
 
 .g-container{
   a{
-    display: inline-block;
-    width: $coupon-width;
-    height: $coupon-height;
-    background: $coupon-bg-image  $coupon-bg-position no-repeat;
-    background-size: $coupon-bg-size;
+    @include icon-coupon;
   }
 }

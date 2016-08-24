@@ -33,6 +33,8 @@ import	spritesmith from 'gulp.spritesmith';		// 雪碧图
 import	glob from 'glob';		// 路径匹配
 import	mergeStream from 'merge-stream';		// 合并流然后返回给run-sequence保证任务顺序执行
 import	path from 'path';		// 路径解析模块
+import	rev from 'gulp-rev';		// 修改文件名增加md5，并生成rev-manifest.json
+import	revCollector from 'gulp-rev-collector';		// 根据rev-manifest.json对html中引用的静态资源路径做替换
 
 /* 获取当前格式化时间 */
 function getNow(){
@@ -46,36 +48,12 @@ gulp.task('task_clean_dev', () => {
 	return gulp.src(Path.devRoot).pipe(clean());
 });
 gulp.task('task_clean_dist', () => {
-	console.log('>>>>>>>>>>>>>>> 上线目录开始清理。' + getNow());
-	return gulp.src(Path.distRoot).pipe(clean())
+  console.log('>>>>>>>>>>>>>>> 发布目录开始清理。' + getNow());
+  return gulp.src(Path.distRoot).pipe(clean())
 });
-
-// ************************************ 编译HTML ************************************
-function compileHtml(options){
-	console.log('>>>>>>>>>>>>>>> html文件开始编译。' + getNow());
-	return gulp.src(Path.src.html)
-		.pipe(fileInclude({
-			prefix: '@@',
-			basepath: __dirname + '/src/util/tpl/'
-		}))
-		.pipe(replace('@@{{prefix}}', '../..'))
-		.pipe(replace('@@{{min}}', options.compress))
-		.pipe(replace('@@{{suffix}}', 'v=' + getNow()));
-}
-gulp.task('task_html_dev', () => {
-	return compileHtml({
-			compress: ''
-		})
-		.pipe(gulp.dest(Path.devRoot))
-		.pipe(liveReload())
-});
-gulp.task('task_html_dist', () => {
-	return compileHtml({
-			compress: '.min'
-		})
-		.pipe(minifyHtml())
-		.pipe(gulp.dest(Path.distRoot))
-		.pipe(size({showFiles: true}))
+gulp.task('task_clean_temp', () => {
+  console.log('>>>>>>>>>>>>>>> 临时目录开始清理。' + getNow());
+  return gulp.src(Path.tempRoot).pipe(clean())
 });
 
 // ************************************ 编译CSS ************************************
@@ -98,8 +76,15 @@ gulp.task('task_css_dist', () => {
 	return compileCss()
 		.pipe(minifyCss())
 		.pipe(rename({suffix: '.min'}))
+		.pipe(rev())
 		.pipe(gulp.dest(Path.distRoot))
-		.pipe(size({showFiles: true}));
+    .pipe(size({showFiles: true}))
+    .pipe(rev.manifest({
+      cwd: Path.tempRoot,
+      merge: true
+    }))
+    .pipe(gulp.dest(Path.tempRoot))
+    ;
 });
 
 // ************************************ 合成雪碧图+生成scss ************************************
@@ -173,12 +158,50 @@ gulp.task('task_js_dist', () => {
 				preserveComments: 'none'  // all保留所有注释
 			}))
 			.pipe(rename({suffix: '.min'}))
-			.pipe(gulp.dest(Path.distRoot));
+      .pipe(rev())
+			.pipe(gulp.dest(Path.distRoot))
+      .pipe(rev.manifest({
+        cwd: Path.tempRoot,
+        merge: true
+      }))
+      .pipe(gulp.dest(Path.tempRoot))
+      ;
 	}
 	// common部分的js
 	deployDist(gulp.src(Path.src.js.common));
 	// module部分的js
 	return deployDist(compileJs());
+});
+
+// ************************************ 编译HTML ************************************
+function compileHtml(options){
+  options = options || {}
+  options.compress = options.compress || '';
+  options.revManifest = options.revManifest || '';
+  console.log('>>>>>>>>>>>>>>> html文件开始编译。' + getNow());
+  return gulp.src([options.revManifest, Path.src.html])
+    .pipe(fileInclude({
+      prefix: '@@',
+      basepath: __dirname + '/src/util/tpl/'
+    }))
+    .pipe(replace('@@{{prefix}}', '../..'))
+    .pipe(replace('@@{{min}}', options.compress))
+  ;
+}
+gulp.task('task_html_dev', () => {
+  return compileHtml()
+    .pipe(gulp.dest(Path.devRoot))
+    .pipe(liveReload())
+});
+gulp.task('task_html_dist', () => {
+  return compileHtml({
+    compress: '.min',
+    revManifest: Path.tempRoot + '/rev-manifest.json'
+  })
+  .pipe(revCollector())
+  .pipe(minifyHtml())
+  .pipe(gulp.dest(Path.distRoot))
+  .pipe(size({showFiles: true}))
 });
 
 // ************************************ 文件编译+监听(npm start) ************************************
@@ -187,8 +210,9 @@ gulp.task('default', [], () => {
 	runSequence(
 		'task_clean_dev',
     'task_sprite',
-    ['task_html_dev', 'task_css_dev', 'task_img_dev', 'task_js_dev'],
-		function(){
+    ['task_css_dev', 'task_img_dev', 'task_js_dev'],
+    'task_html_dev',
+    function(){
 			console.log('>>>>>>>>>>>>>>> gulp全部任务执行完毕。' + getNow());
 			// 开启liveReload
 			liveReload.listen();
@@ -228,8 +252,10 @@ gulp.task('build', [], () => {
 	runSequence(
 		'task_clean_dist',
     'task_sprite',
-		['task_html_dist', 'task_css_dist', 'task_img_dist', 'task_js_dist'],
-		function(){
+		['task_css_dist', 'task_img_dist', 'task_js_dist'],
+    'task_html_dist',
+    'task_clean_temp',
+    function(){
 			console.log('>>>>>>>>>>>>>>> gulp全部任务执行完毕。' + getNow());
 		}
 	);

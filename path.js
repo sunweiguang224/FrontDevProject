@@ -8,7 +8,8 @@ var moduleName = args.name || 'login' || '*';
 const Path = {
 	srcRoot: 'src',
 	devRoot: 'dev',
-	distRoot: 'dist'
+	distRoot: 'dist',
+  tempRoot: '.temp'
 };
 Path.src = {
 	css: [
@@ -30,5 +31,4 @@ Path.src = {
 		'src/generator/*/*'
 	]
 };
-
 module.exports = Path;

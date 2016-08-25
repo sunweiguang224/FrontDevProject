@@ -70,7 +70,7 @@ gulp.task('task_css_dev', () => {
 		.pipe(sourcemaps.write('./'))	// 写到目标css同级目录下
 		//.pipe(header('\/* This css was compiled at '+ getNow() +'. *\/\n'))
 		.pipe(gulp.dest(Path.devRoot))
-		.pipe(liveReload());
+		;
 });
 gulp.task('task_css_dist', () => {
 	return compileCss()
@@ -120,7 +120,7 @@ function compileImg(){
 gulp.task('task_img_dev', () => {
 	return compileImg()
 		.pipe(gulp.dest(Path.devRoot))
-		.pipe(liveReload());
+		;
 });
 gulp.task('task_img_dist', () => {
 	return compileImg()
@@ -143,7 +143,7 @@ function compileJs(){
 gulp.task('task_js_dev', () => {
 	function deployDev(stream){
 		return stream.pipe(gulp.dest(Path.devRoot))
-			.pipe(liveReload());
+			;
 	}
 	// common部分的js
 	deployDev(gulp.src(Path.src.js.common));
@@ -191,7 +191,7 @@ function compileHtml(options){
 gulp.task('task_html_dev', () => {
   return compileHtml()
     .pipe(gulp.dest(Path.devRoot))
-    .pipe(liveReload())
+    ;
 });
 gulp.task('task_html_dist', () => {
   return compileHtml({
@@ -214,8 +214,6 @@ gulp.task('default', [], () => {
     'task_html_dev',
     function(){
 			console.log('>>>>>>>>>>>>>>> gulp全部任务执行完毕。' + getNow());
-			// 开启liveReload
-			liveReload.listen();
 			// 监视html变化
 			gulp.watch([
 				Path.src.html,
@@ -243,6 +241,15 @@ gulp.task('default', [], () => {
 				Path.srcRoot + '/util/**/*.js',
 				Path.srcRoot + '/module/**/*.js'
 			], ['task_js_dev']);
+      // 监视dev目录变化触发liveReload
+      liveReload.listen();
+      gulp.watch([
+        Path.devRoot + '/**/*'
+      ], function(file){
+        //setTimeout(function(){
+          liveReload.changed(file.path);
+        //}, 1000);
+      });
 		}
 	);
 });

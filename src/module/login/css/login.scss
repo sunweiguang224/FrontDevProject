@@ -2,8 +2,15 @@
 @import '../../../util/css/util';
 @import '_icon';
 
+$height: 2px !default;
 .g-container{
+  $height: 3px;
+  $height: 4px !global;
+  height: $height;
   a{
     @include icon-coupon;
   }
+}
+body{
+  height: $height;
 }

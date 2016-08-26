@@ -1,48 +1,36 @@
 var template = require('tmodjs-loader/runtime');
 
+/**
+ * 日期格式化
+ * 用法：{{时间戳 | dateFormat:'yyyy-MM-dd hh:mm:ss SSS'}}
+ */
 template.helper('dateFormat', function (timestamp, pattern) {
-	/**
-	 * 时间格式化
-	 * @param date 日期对象|时间戳数字|时间戳字符串
-	 * @param format 格式化字符串
-	 * @returns {String}
-	 * Demo: dateFormat(new Date(), "yyyy-MM-dd HH:mm:ss:SSS);
-	 */
-	var oneTo2Digits = function(num){
-		var num = new String(num);
-		if(num.length == 1){
-			return "0" + num;
-		}
-		return num;
-	};
-	return (function(date, format) {
-		if(date instanceof Date){
-		}else if(typeof date === 'number'){
-			date = new Date(date);
-		}else if(Object.prototype.toString.call(date) === '[object String]'){
-			date = new Date(parseInt(date));
-		}else{
-			return "";
-		}
-		if(!format){
-			format = "yyyy-MM-dd HH:mm:ss";
-		}
-		var year = new String(date.getFullYear());
-		var month = oneTo2Digits(new String(date.getMonth() + 1));
-		var dat = oneTo2Digits(new String(date.getDate()));
-		var hour = oneTo2Digits(new String(date.getHours()));
-		var minute = oneTo2Digits(new String(date.getMinutes()));
-		var second = oneTo2Digits(new String(date.getSeconds()));
-		var milliSeconds = new String(date.getMilliseconds());
-		format = format.replace(/yyyy/g, year).replace(/yyy/g, year.substr(-3)).replace(/yy/g, year.substr(-2)).replace(/y/g, year.substr(-1));
-		format = format.replace(/MM/g, month).replace(/M/g, month.substr(-1));
-		format = format.replace(/dd/g, dat).replace(/d/g, dat.substr(-1));
-		format = format.replace(/HH/g, hour).replace(/H/g, hour.substr(-1));
-		format = format.replace(/mm/g, minute).replace(/m/g, minute.substr(-1));
-		format = format.replace(/ss/g, second).replace(/s/g, second.substr(-1));
-		format = format.replace(/SSS/g, milliSeconds).replace(/SS/g, month.substr(-2)).replace(/S/g, milliSeconds.substr(-1));
-		return format;
-	})(timestamp, pattern);
+  var dateFormat = function (date, pattern) {
+    date = date || new Date();
+    date = date instanceof Date ? date : new Date(date);
+    pattern = pattern || 'yyyy-MM-dd hh:mm:ss';
+    var map = {
+      "M+": date.getMonth() + 1, //month
+      "d+": date.getDate(), //day
+      "h+": date.getHours(), //hour
+      "m+": date.getMinutes(), //minute
+      "s+": date.getSeconds(), //second
+      "q+": Math.floor((date.getMonth() + 3) / 3), //quarter
+    };
+    if (/(y+)/.test(pattern)) {
+      pattern = pattern.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+    }
+    if (/(S+)/.test(pattern)) {
+      pattern = pattern.replace(RegExp.$1, (date.getMilliseconds() + "").substr(3 - RegExp.$1.length));
+    }
+    for (var i in map) {
+      if (new RegExp("(" + i + ")").test(pattern)) {
+        pattern = pattern.replace(RegExp.$1, RegExp.$1.length == 1 ? map[i] : ("00" + map[i]).substr(("" + map[i]).length));
+      }
+    }
+    return pattern;
+  };
+  return dateFormat(timestamp, pattern)
 });
 
 module.exports = template;

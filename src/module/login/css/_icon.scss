@@ -4,7 +4,7 @@ $coupon-height: (42rem/100);
 $coupon-bg-image: url(../img/icon.png);
 $coupon-bg-position: (-112rem/100) (0rem/100);
 $coupon-bg-size: (154rem/100) (139rem/100);
-@mixin icon-coupon(){
+@mixin i-coupon(){
   display: inline-block;
   width: $coupon-width;
   height: $coupon-height;
@@ -18,7 +18,7 @@ $level-height: (27rem/100);
 $level-bg-image: url(../img/icon.png);
 $level-bg-position: (0rem/100) (-112rem/100);
 $level-bg-size: (154rem/100) (139rem/100);
-@mixin icon-level(){
+@mixin i-level(){
   display: inline-block;
   width: $level-width;
   height: $level-height;
@@ -32,7 +32,7 @@ $money-height: (42rem/100);
 $money-bg-image: url(../img/icon.png);
 $money-bg-position: (-112rem/100) (-52rem/100);
 $money-bg-size: (154rem/100) (139rem/100);
-@mixin icon-money(){
+@mixin i-money(){
   display: inline-block;
   width: $money-width;
   height: $money-height;
@@ -46,7 +46,7 @@ $over-height: (102rem/100);
 $over-bg-image: url(../img/icon.png);
 $over-bg-position: (0rem/100) (0rem/100);
 $over-bg-size: (154rem/100) (139rem/100);
-@mixin icon-over(){
+@mixin i-over(){
   display: inline-block;
   width: $over-width;
   height: $over-height;

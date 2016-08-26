@@ -8,7 +8,7 @@ $height: 2px !default;
   $height: 4px !global;
   height: $height;
   a{
-    @include icon-coupon;
+    @include i-coupon;
   }
 }
 body{

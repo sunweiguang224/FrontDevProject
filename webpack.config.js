@@ -11,7 +11,7 @@ module.exports = {
 	resolve: {
 		// 为公共资源指定别名，用的时候直接引用别名即可
 		alias: {
-			jQuery: __dirname + '/lib/js/jquery-3.0.0.min.js',
+			//jQuery: __dirname + '/lib/js/jquery-3.0.0.min.js',
 			sizzle: __dirname + '/lib/js/sizzle.min.js',
 			templateHelper: __dirname + '/src/util/js/templateHelper.js',
 			util: __dirname + '/src/util/js/util.js',
@@ -48,10 +48,12 @@ module.exports = {
 	plugins: [
 		// 提供全局的变量，在模块(entry指定的)中使用无需用require引入，
 		new webpack.ProvidePlugin({
-			jQuery: "jQuery",
-			$: "jQuery"
+			//jQuery: "jQuery",
+			//$: "jQuery",
+			$: "jquery",  // 会去node_modules下找jquery
+      templateHelper: "templateHelper",
 		}),
-		// 给webpack编译过的js文件加banner
+    // js加banner
 		//new webpack.BannerPlugin('This file is created by swg ' + new Date()), 已经通过gulp来加了
 		// 将公共代码抽离出来合并为一个文件
 		new webpack.optimize.CommonsChunkPlugin('common', 'common/js/common.bundle.js')

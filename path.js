@@ -2,7 +2,7 @@ var minimist = require('minimist'); // 获取key-value形势的参数，如 npm 
 
 // 分模块编译，优先级：命令行 > 指定 > 全部，
 var args = minimist(process.argv);
-var moduleName = args.name || 'login' || '*';
+var moduleName = args.name || '' || '*';
 
 // ************************************ 变量Path ************************************
 const Path = {

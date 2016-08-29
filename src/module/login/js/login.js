@@ -6,6 +6,7 @@
 var templateHelper = require('templateHelper');
 var util = require('util');
 import util1 from 'util';
+import jquery from 'jquery';
 
 function Biz() {
   console.log(util1)

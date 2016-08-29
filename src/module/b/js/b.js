@@ -5,6 +5,7 @@
  */
 var templateHelper = require('templateHelper');
 var util = require('util');
+import jquery from 'jquery';
 
 function Biz() {
 	var $body = $('body');

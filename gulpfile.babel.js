@@ -175,11 +175,8 @@ gulp.task('task_js_dist', () => {
 
 // ************************************ 编译HTML ************************************
 function compileHtml(options){
-  options = options || {}
-  options.compress = options.compress || '';
-  options.revManifest = options.revManifest || '';
   console.log('>>>>>>>>>>>>>>> html文件开始编译。' + getNow());
-  return gulp.src([options.revManifest, Path.src.html])
+  return gulp.src(options.src)
     .pipe(fileInclude({
       prefix: '@@',
       basepath: __dirname + '/src/util/tpl/'
@@ -189,14 +186,17 @@ function compileHtml(options){
   ;
 }
 gulp.task('task_html_dev', () => {
-  return compileHtml()
-    .pipe(gulp.dest(Path.devRoot))
-    ;
+  return compileHtml({
+    src: [Path.src.html],
+    compress: '',
+  })
+  .pipe(gulp.dest(Path.devRoot))
+  ;
 });
 gulp.task('task_html_dist', () => {
   return compileHtml({
-    compress: '.min',
-    revManifest: Path.tempRoot + '/rev-manifest.json'
+    src: [Path.src.html, Path.tempRoot + '/rev-manifest.json'],
+    compress: '.min'
   })
   .pipe(revCollector())
   .pipe(minifyHtml())

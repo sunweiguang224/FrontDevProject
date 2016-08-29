@@ -6,4 +6,5 @@
 /dev
 /npm-debug.log
 /.temp
+/rev-manifest.json
 

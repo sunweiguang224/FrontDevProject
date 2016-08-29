@@ -11,7 +11,6 @@ module.exports = {
 	resolve: {
 		// 为公共资源指定别名，用的时候直接引用别名即可
 		alias: {
-			//jQuery: __dirname + '/lib/js/jquery-3.0.0.min.js',
 			sizzle: __dirname + '/lib/js/sizzle.min.js',
 			templateHelper: __dirname + '/src/util/js/templateHelper.js',
 			util: __dirname + '/src/util/js/util.js',
@@ -21,13 +20,13 @@ module.exports = {
 	},
 	entry: function(path) {
 		var entry = {
-			common: ['jQuery', /*'sizzle', */'templateHelper', 'util', /*'swg', */'ua']		// JS工具
+			commons: ['templateHelper', 'util', 'ua', 'swg']		// JS工具
 		};
 		var files = glob.sync(path);
 		for (var i = 0; i < files.length; i++) {
-			var filePath = './' + files[i];		// 读取文件路径
-			var moduleName = filePath.replace('./'+Path.srcRoot+'/', '').replace('.js', '');	// 文件编译后路径
-			entry[moduleName] = filePath;
+			var file = files[i];		// 读取文件路径
+			var moduleName = file.replace(Path.srcRoot+'/', '').replace('.js', '');	// 文件编译后路径
+			entry[moduleName] = './' + file;
 		}
 		return entry;
 	}(Path.src.js.module),
@@ -43,6 +42,7 @@ module.exports = {
 			{test: /\.tpl$/, loader: "tmodjs"},	// artTemplate的webpack版
 			{test: /\.json$/, loader: "json"},	// json-loader，.json一般用于放假数据
 			//{test: /\.png$/, loader: "url-loader?limit=102400" }	//引起gulp-uglify报错，原因不详// require100KB以下的图片将得到base64编码
+      {test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader'},
 		]
 	},
 	plugins: [
@@ -56,6 +56,11 @@ module.exports = {
     // js加banner
 		//new webpack.BannerPlugin('This file is created by swg ' + new Date()), 已经通过gulp来加了
 		// 将公共代码抽离出来合并为一个文件
-		new webpack.optimize.CommonsChunkPlugin('common', 'common/js/common.bundle.js')
+		//new webpack.optimize.CommonsChunkPlugin('common', 'common/js/common.bundle.js'),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: "commons",
+      filename: 'common/js/common.bundle.js',
+      minChunks: 5
+    })
 	]
 };

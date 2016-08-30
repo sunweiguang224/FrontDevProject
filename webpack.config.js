@@ -15,13 +15,12 @@ module.exports = {
 			templateHelper: __dirname + '/src/util/js/templateHelper.js',
 			util: __dirname + '/src/util/js/util.js',
 			ua: __dirname + '/src/util/js/ua.js',
-			swg: __dirname + '/src/util/js/swg.js',
       setting: __dirname + '/src/util/js/setting.js',
 		}
 	},
 	entry: function(path) {
 		var entry = {
-			commons: ['jquery', 'setting', 'templateHelper', 'util', 'ua']		// JS工具
+			commons: ['jquery', /*'swg-js',*/ 'setting', 'templateHelper', 'util', 'ua']		// JS工具
 		};
 		var files = glob.sync(path);
 		for (var i = 0; i < files.length; i++) {
@@ -31,6 +30,24 @@ module.exports = {
 		}
 		return entry;
 	}(Path.src.js.module),
+  plugins: [
+    // 将公共代码抽离出来合并为一个文件
+    new webpack.optimize.CommonsChunkPlugin({
+      name: "commons",
+      filename: 'common/js/common.bundle.js',
+      minChunks: 2
+    }),
+    // 提供全局的变量，在模块(entry指定的)中使用无需用require引入，
+    new webpack.ProvidePlugin({
+      $: "jquery",  // 会去node_modules下找jquery
+      jQuery: "jquery",   // 提供给jq的扩展插件使用
+      //swg: "swg-js",
+      setting: "setting",
+      templateHelper: "templateHelper",
+      util: "util",
+      ua: "ua",
+    }),
+  ],
 	output: {
 		//path: __dirname + '/.build/js',	//__dirname 是当前模块文件所在目录的完整绝对路径
 		//publicPath: '../../js/',		//网站运行时的访问路径 未知
@@ -46,21 +63,4 @@ module.exports = {
       {test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader'},
 		]
 	},
-	plugins: [
-		// 将公共代码抽离出来合并为一个文件
-    new webpack.optimize.CommonsChunkPlugin({
-      name: "commons",
-      filename: 'common/js/common.bundle.js',
-      minChunks: 2
-    }),
-    // 提供全局的变量，在模块(entry指定的)中使用无需用require引入，
-    new webpack.ProvidePlugin({
-      $: "jquery",  // 会去node_modules下找jquery
-      jQuery: "jquery",   // 提供给jq的扩展插件使用
-      setting: "setting",
-      templateHelper: "templateHelper",
-      util: "util",
-      ua: "ua",
-    }),
-	]
 };

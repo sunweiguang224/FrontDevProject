@@ -15,35 +15,9 @@
 <body>
 	<div class="g-container">
     <a href=""></a>
-	</div>
+    <img class="lazy" data-original="http://k.sohu.com/i/index_20160530/logo20160531.png" style="margin-top: 1000px">
+  </div>
 	<script src="@@{{prefix}}/common/js/common.bundle@@{{min}}.js"></script>
 	<script src="@@{{prefix}}/module/login/js/login.bundle@@{{min}}.js"></script>
-  <script>
-    var dateFormat = function (pattern, date) {
-      date = date || new Date();
-      date = date instanceof Date ? date : new Date(date);
-      pattern = pattern || 'yyyy-MM-dd hh:mm:ss';
-      var map = {
-        "M+": date.getMonth() + 1, //month
-        "d+": date.getDate(), //day
-        "h+": date.getHours(), //hour
-        "m+": date.getMinutes(), //minute
-        "s+": date.getSeconds(), //second
-        "q+": Math.floor((date.getMonth() + 3) / 3), //quarter
-      };
-      if (/(y+)/.test(pattern)) {
-        pattern = pattern.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
-      }
-      if (/(S+)/.test(pattern)) {
-        pattern = pattern.replace(RegExp.$1, (date.getMilliseconds() + "").substr(3 - RegExp.$1.length));
-      }
-      for (var i in map) {
-        if (new RegExp("(" + i + ")").test(pattern)) {
-          pattern = pattern.replace(RegExp.$1, RegExp.$1.length == 1 ? map[i] : ("00" + map[i]).substr(("" + map[i]).length));
-        }
-      }
-      return pattern;
-    };
-  </script>
 </body>
 </html>

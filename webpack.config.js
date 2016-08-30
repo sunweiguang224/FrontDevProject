@@ -15,12 +15,13 @@ module.exports = {
 			templateHelper: __dirname + '/src/util/js/templateHelper.js',
 			util: __dirname + '/src/util/js/util.js',
 			ua: __dirname + '/src/util/js/ua.js',
-			swg: __dirname + '/src/util/js/swg.js'
+			swg: __dirname + '/src/util/js/swg.js',
+      setting: __dirname + '/src/util/js/setting.js',
 		}
 	},
 	entry: function(path) {
 		var entry = {
-			commons: [/*'templateHelper', 'util', 'ua', 'swg'*/]		// JS工具
+			commons: ['jquery', 'setting', 'templateHelper', 'util', 'ua']		// JS工具
 		};
 		var files = glob.sync(path);
 		for (var i = 0; i < files.length; i++) {
@@ -46,18 +47,20 @@ module.exports = {
 		]
 	},
 	plugins: [
-		// 提供全局的变量，在模块(entry指定的)中使用无需用require引入，
-		new webpack.ProvidePlugin({
-			$: "jquery",  // 会去node_modules下找jquery
-		}),
-    // js加banner
-		//new webpack.BannerPlugin('This file is created by swg ' + new Date()), 已经通过gulp来加了
 		// 将公共代码抽离出来合并为一个文件
-		//new webpack.optimize.CommonsChunkPlugin('common', 'common/js/common.bundle.js'),
     new webpack.optimize.CommonsChunkPlugin({
       name: "commons",
       filename: 'common/js/common.bundle.js',
-      minChunks: 5
-    })
+      minChunks: 2
+    }),
+    // 提供全局的变量，在模块(entry指定的)中使用无需用require引入，
+    new webpack.ProvidePlugin({
+      $: "jquery",  // 会去node_modules下找jquery
+      jQuery: "jquery",   // 提供给jq的扩展插件使用
+      setting: "setting",
+      templateHelper: "templateHelper",
+      util: "util",
+      ua: "ua",
+    }),
 	]
 };

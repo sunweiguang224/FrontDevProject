@@ -3,14 +3,23 @@
  * 功能描述: 
  * 作者: swg
  */
-var templateHelper = require('templateHelper');
-var util = require('util');
-import util1 from 'util';
-import jquery from 'jquery';
+//var templateHelper = require('templateHelper');
+//var util = require('util');
+//import util1 from 'util';
+////import jquery_lazyload from 'jquery-lazyload';
 
 function Biz() {
-  console.log(util1)
-  debugger
+  var awef = new Promise(function(){
+
+  });
+  console.log($)
+  console.log(setting)
+  console.log(templateHelper)
+  console.log(util)
+  console.log(ua)
+  console.log(awef)
+  //console.log(util1)
+  //debugger
   const a  = 1;
   var i = 1;
   console.info(i)

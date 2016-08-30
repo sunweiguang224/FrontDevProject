@@ -59,6 +59,7 @@
     "gulp-rev-collector": "^1.0.5",
     "gulp.spritesmith": "^6.2.1",
     "jquery": "^3.1.0",
+    "jquery-lazyload": "^1.9.7",
     "swg-js": "^1.0.0"
   }
 }

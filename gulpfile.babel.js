@@ -35,6 +35,7 @@ import	mergeStream from 'merge-stream';		// 合并流然后返回给run-sequence
 import	path from 'path';		// 路径解析模块
 import	rev from 'gulp-rev';		// 修改文件名增加md5，并生成rev-manifest.json
 import	revCollector from 'gulp-rev-collector';		// 根据rev-manifest.json对html中引用的静态资源路径做替换
+import	gzip from 'gulp-gzip';		// gzip对html、js、css、img进行强力压缩，用法：.pipe(gzip({append: false})) //去掉.gz后缀
 
 /* 获取当前格式化时间 */
 function getNow(){

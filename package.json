@@ -55,11 +55,13 @@
   "dependencies": {
     "babel-loader": "^6.2.5",
     "gulp-file-include": "^0.14.0",
+    "gulp-gzip": "^1.4.0",
     "gulp-rev": "^7.1.2",
     "gulp-rev-collector": "^1.0.5",
     "gulp.spritesmith": "^6.2.1",
     "jquery": "^3.1.0",
     "jquery-lazyload": "^1.9.7",
-    "swg-js": "^1.0.1"
+    "swg-js": "^1.0.1",
+    "underscore": "^1.8.3"
   }
 }

@@ -15,12 +15,12 @@ module.exports = {
 			templateHelper: __dirname + '/src/util/js/templateHelper.js',
 			util: __dirname + '/src/util/js/util.js',
 			ua: __dirname + '/src/util/js/ua.js',
-      setting: __dirname + '/src/util/js/setting.js',
+      initSetting: __dirname + '/src/util/js/initSetting.js',
 		}
 	},
 	entry: function(path) {
 		var entry = {
-			commons: ['jquery', /*'swg-js',*/ 'setting', 'templateHelper', 'util', 'ua']		// JS工具
+			commons: ['jquery', /*'swg-js',*/ 'initSetting', 'templateHelper', 'util', 'ua']		// JS工具
 		};
 		var files = glob.sync(path);
 		for (var i = 0; i < files.length; i++) {
@@ -39,10 +39,13 @@ module.exports = {
     }),
     // 提供全局的变量，在模块(entry指定的)中使用无需用require引入，
     new webpack.ProvidePlugin({
-      $: "jquery",  // 会去node_modules下找jquery
+      // npm提供
+      $: "jquery",
       jQuery: "jquery",   // 提供给jq的扩展插件使用
+      _: 'underscore',  // 各种实用方法
       //swg: "swg-js",
-      setting: "setting",
+      // 工程中提供
+      initSetting: "initSetting",
       templateHelper: "templateHelper",
       util: "util",
       ua: "ua",

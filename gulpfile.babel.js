@@ -80,10 +80,7 @@ gulp.task('task_css_dist', () => {
 		.pipe(rev())
 		.pipe(gulp.dest(Path.distRoot))
     .pipe(size({showFiles: true}))
-    .pipe(rev.manifest({
-      cwd: Path.tempRoot,
-      merge: true
-    }))
+    .pipe(rev.manifest('rev-manifest/css.json'))
     .pipe(gulp.dest(Path.tempRoot))
     ;
 });
@@ -131,7 +128,7 @@ gulp.task('task_img_dist', () => {
 });
 
 // ************************************ 编译JS ************************************
-function compileJs(){
+function webpackCompileJs(){
 	console.log('>>>>>>>>>>>>>>> js文件开始编译。' + getNow());
 	let webpackConfig = require("./webpack.config.js");
 	return gulp.src('')
@@ -149,11 +146,11 @@ gulp.task('task_js_dev', () => {
 	// common部分的js
 	deployDev(gulp.src(Path.src.js.common));
 	// module部分的js
-	return deployDev(compileJs());
+	return deployDev(webpackCompileJs());
 });
 gulp.task('task_js_dist', () => {
-	function deployDist(stream){
-		return stream.pipe(uglify({
+	function deployDist(options){
+		return options.stream.pipe(uglify({
 				mangle: true,  // 类型：Boolean 默认：true 是否修改变量名
 				compress: true,  // 类型：Boolean 默认：true 是否完全压缩
 				preserveComments: 'none'  // all保留所有注释
@@ -161,17 +158,20 @@ gulp.task('task_js_dist', () => {
 			.pipe(rename({suffix: '.min'}))
       .pipe(rev())
 			.pipe(gulp.dest(Path.distRoot))
-      .pipe(rev.manifest({
-        cwd: Path.tempRoot,
-        merge: true
-      }))
+      .pipe(rev.manifest(options.manifestPath))
       .pipe(gulp.dest(Path.tempRoot))
       ;
 	}
 	// common部分的js
-	deployDist(gulp.src(Path.src.js.common));
-	// module部分的js
-	return deployDist(compileJs());
+  deployDist({
+    stream: gulp.src(Path.src.js.common),
+    manifestPath: 'rev-manifest/js-common.json'
+  });
+  // module部分的js
+  return deployDist({
+    stream: webpackCompileJs(),
+    manifestPath: 'rev-manifest/js-module.json'
+  });
 });
 
 // ************************************ 编译HTML ************************************
@@ -196,7 +196,7 @@ gulp.task('task_html_dev', () => {
 });
 gulp.task('task_html_dist', () => {
   return compileHtml({
-    src: [Path.src.html, Path.tempRoot + '/rev-manifest.json'],
+    src: [Path.src.html, Path.tempRoot + '/rev-manifest/*.json'],
     compress: '.min'
   })
   .pipe(revCollector())

@@ -13,7 +13,7 @@ const Path = {
 };
 Path.src = {
 	css: [
-    Path.srcRoot + '/*common/css/*.scss',     // 原先写法 css: Path.srcRoot + '/*(module|common)/**/css/*.scss',
+    Path.srcRoot + '/*common/css/*.*',     // 原先写法 css: Path.srcRoot + '/*(module|common)/**/css/*.scss',
     Path.srcRoot + '/*module/'+moduleName+'/css/*.scss'
   ],
 	icon: Path.srcRoot + '/*module/*/img/*/*', // common模块下图片是公用的，页面之间可以利用缓存，故不作处理

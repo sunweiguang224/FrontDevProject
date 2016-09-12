@@ -7,17 +7,17 @@
 	@@include('meta.tpl')
 
 	<script>var designWidth = '';</script>
-	@@include('remRootSize.tpl')
+  <script src="{{path}}/common/js/remRootSize{{min}}.js"></script>
 
-	<link rel="stylesheet" href="@@{{prefix}}/common/css/common@@{{min}}.css">
-	<link rel="stylesheet" href="@@{{prefix}}/module/login/css/login@@{{min}}.css">
+	<link rel="stylesheet" href="{{path}}/common/css/normalize{{min}}.css">
+	<link rel="stylesheet" href="{{path}}/common/css/common{{min}}.css">
+	<link rel="stylesheet" href="{{path}}/module/login/css/login{{min}}.css">
 </head>
 <body>
 	<div class="g-container">
-    <a href=""></a>
-    <img class="lazy" data-original="http://k.sohu.com/i/index_20160530/logo20160531.png" style="margin-top: 1000px">
-  </div>
-	<script src="@@{{prefix}}/common/js/common.bundle@@{{min}}.js"></script>
-	<script src="@@{{prefix}}/module/login/js/login.bundle@@{{min}}.js"></script>
+
+	</div>
+	<script src="{{path}}/common/js/common.bundle{{min}}.js"></script>
+	<script src="{{path}}/module/login/js/login.bundle{{min}}.js"></script>
 </body>
 </html>

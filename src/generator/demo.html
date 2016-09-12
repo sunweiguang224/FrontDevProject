@@ -7,16 +7,17 @@
 	@@include('meta.tpl')
 
 	<script>var designWidth = '';</script>
-	@@include('remRootSize.tpl')
+  <script src="{{path}}/common/js/remRootSize{{min}}.js"></script>
 
-	<link rel="stylesheet" href="@@{{prefix}}/common/css/common@@{{min}}.css">
-	<link rel="stylesheet" href="@@{{prefix}}/module/${{module}}/css/${{file}}@@{{min}}.css">
+	<link rel="stylesheet" href="{{path}}/common/css/normalize{{min}}.css">
+	<link rel="stylesheet" href="{{path}}/common/css/common{{min}}.css">
+	<link rel="stylesheet" href="{{path}}/module/${{module}}/css/${{file}}{{min}}.css">
 </head>
 <body>
 	<div class="g-container">
 
 	</div>
-	<script src="@@{{prefix}}/common/js/common.bundle@@{{min}}.js"></script>
-	<script src="@@{{prefix}}/module/${{module}}/js/${{file}}.bundle@@{{min}}.js"></script>
+	<script src="{{path}}/common/js/common.bundle{{min}}.js"></script>
+	<script src="{{path}}/module/${{module}}/js/${{file}}.bundle{{min}}.js"></script>
 </body>
 </html>

@@ -1,1 +1,0 @@
-<div>{{a | dateFormat:'yyyy/MM/dd'}}</div>

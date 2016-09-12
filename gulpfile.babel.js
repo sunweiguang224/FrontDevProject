@@ -182,8 +182,8 @@ function compileHtml(options){
       prefix: '@@',
       basepath: __dirname + '/src/util/tpl/'
     }))
-    .pipe(replace('@@{{prefix}}', '../..'))
-    .pipe(replace('@@{{min}}', options.compress))
+    .pipe(replace('{{path}}', '../..'))
+    .pipe(replace('{{min}}', options.compress))
   ;
 }
 gulp.task('task_html_dev', () => {

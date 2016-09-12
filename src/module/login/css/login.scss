@@ -1,15 +1,7 @@
 @charset "UTF-8";
 @import '../../../util/css/util';
-@import '_icon';
+//@import '_icon';
 
 .g-container{
-  a{
-    @include i-coupon;
-  }
-}
-body{
-}
-body .g-container{display: block;}
-.none{display: none !important;}
 
-
+}

@@ -11,16 +11,15 @@ module.exports = {
 	resolve: {
 		// 为公共资源指定别名，用的时候直接引用别名即可
 		alias: {
-			sizzle: __dirname + '/lib/js/sizzle.min.js',
-			templateHelper: __dirname + '/src/util/js/templateHelper.js',
-			util: __dirname + '/src/util/js/util.js',
-			ua: __dirname + '/src/util/js/ua.js',
-      initSetting: __dirname + '/src/util/js/initSetting.js',
+			helper: __dirname + '/src/util/js/helper.js',
+      setting: __dirname + '/src/util/js/setting.js',
+      ua: __dirname + '/src/util/js/ua.js',
+      util: __dirname + '/src/util/js/util.js',
 		}
 	},
 	entry: function(path) {
 		var entry = {
-			commons: ['jquery', /*'swg-js',*/ 'initSetting', 'templateHelper', 'util', 'ua']		// JS工具
+			commons: ['helper', 'setting', 'ua', 'util']		// JS工具
 		};
 		var files = glob.sync(path);
 		for (var i = 0; i < files.length; i++) {
@@ -35,20 +34,18 @@ module.exports = {
     new webpack.optimize.CommonsChunkPlugin({
       name: "commons",
       filename: 'common/js/common.bundle.js',
-      minChunks: 2
+      minChunks: 5
     }),
     // 提供全局的变量，在模块(entry指定的)中使用无需用require引入，
     new webpack.ProvidePlugin({
-      // npm提供
+      jQuery: "jquery", // jQuery变量提供给jquery-lazyload（因jquery-lazyload内部没有require('jquery')）
       $: "jquery",
-      jQuery: "jquery",   // 提供给jq的扩展插件使用
-      _: 'underscore',  // 各种实用方法
-      //swg: "swg-js",
-      // 工程中提供
-      initSetting: "initSetting",
-      templateHelper: "templateHelper",
-      util: "util",
+      // 下面的暂不使用，哪个页面用就动态引入，提高效率（因提供变量时会执行该变量的生成函数）
+      /*_: 'underscore',
+      helper: "helper",
+      setting: "setting",
       ua: "ua",
+      util: "util",*/
     }),
   ],
 	output: {

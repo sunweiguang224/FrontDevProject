@@ -215,10 +215,11 @@ gulp.task('default', [], () => {
     'task_html_dev',
     function(){
 			console.log('>>>>>>>>>>>>>>> gulp全部任务执行完毕。' + getNow());
-			// 监视html变化
+			// 监视html、模板变化
 			gulp.watch([
 				Path.src.html,
-				Path.srcRoot + '/util/**/*.html'
+				Path.srcRoot + '/util/**/*.html',
+				Path.srcRoot + '/util/**/*.tpl'
 			], ['task_html_dev']);
       // 监视css变化
 			gulp.watch([
@@ -236,11 +237,13 @@ gulp.task('default', [], () => {
 			], function(){
         runSequence('task_sprite', ['task_css_dev', 'task_img_dev'])
       });
-      // 监视js变化
+      // 监视js、模板变化
 			gulp.watch([
 				Path.src.js.common,
 				Path.srcRoot + '/util/**/*.js',
-				Path.srcRoot + '/module/**/*.js'
+				Path.srcRoot + '/util/**/*.tpl',
+				Path.srcRoot + '/module/**/*.js',
+				Path.srcRoot + '/module/**/*.tpl'
 			], ['task_js_dev']);
       // 监视dev目录变化触发liveReload
       liveReload.listen();

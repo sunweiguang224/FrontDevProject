@@ -13,7 +13,7 @@ const Path = {
 };
 Path.src = {
 	css: [
-    Path.srcRoot + '/*common/css/*.*',     // 原先写法 css: Path.srcRoot + '/*(module|common)/**/css/*.scss',
+    Path.srcRoot + '/*common/css/**/*.*',     // 原先写法 css: Path.srcRoot + '/*(module|common)/**/css/*.scss',
     Path.srcRoot + '/*module/'+moduleName+'/css/*.scss'
   ],
 	icon: Path.srcRoot + '/*module/*/img/*/*', // common模块下图片是公用的，页面之间可以利用缓存，故不作处理
@@ -27,8 +27,8 @@ Path.src = {
 		module: Path.srcRoot + '/*module/'+moduleName+'/js/*.js'		// 由webpack负责
 	},
 	generator: [
-		'src/generator/*.html',
-		'src/generator/*/*'
+		'generator/*.html',
+		'generator/*/*'
 	]
 };
 module.exports = Path;

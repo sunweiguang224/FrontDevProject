@@ -64,7 +64,9 @@ function compileCss(){
 		// 开发环境
 		.pipe(sourcemaps.init())	// 放到最开始才能对应原始的scss文件
 		.pipe(sass({outputStyle: 'uncompressed'}))
-		.pipe(autoprefixer());
+		.pipe(autoprefixer({
+      browsers: ['last 2 versions']
+    }));
 }
 gulp.task('task_css_dev', () => {
 	return compileCss()

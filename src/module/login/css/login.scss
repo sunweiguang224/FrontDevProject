@@ -3,5 +3,9 @@
 //@import '_icon';
 
 .g-container{
-
+  background: red;
+  @include mask(0.1);
+  .wef{
+    display: flex;
+  }
 }

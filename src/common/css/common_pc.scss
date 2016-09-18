@@ -1,0 +1,35 @@
+@charset "UTF-8";
+@import './lib/_normalize';
+
+/*样式重置*/
+body {
+  font-family: "微软雅黑", Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+ul {
+  list-style-position: inside;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+img {
+  border-style: none;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+iframe {
+  border: none;
+}
+
+/*外层容器*/
+.g-container {
+  width: 1000px;
+}
+
+

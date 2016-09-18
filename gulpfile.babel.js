@@ -109,7 +109,7 @@ gulp.task('task_sprite', () => {
       merged.add(stream.css.pipe(gulp.dest(iconDir + '/../../css/')));
     }
   });
-  return merged;  // 保证顺序执行
+  return merged.isEmpty() ? null : merged;  // 保证顺序执行
 });
 
 // ************************************ 编译图片 ************************************
@@ -327,8 +327,10 @@ gulp.task('create', () => {
 			.pipe(replace('${{author}}', answer.author))
 			.pipe(gulp.dest(newModulePath))
 			.on('end', function(){
-				fs.mkdir(newModulePath + '/img');
-				fs.mkdir(newModulePath + '/img/icon');
+        setTimeout(function(){
+          fs.mkdirSync(newModulePath + '/img');
+          fs.mkdirSync(newModulePath + '/img/icon');
+        }, 1000);
 			})
 		;
 		console.log('>>>>>>>>>>>>>>> '+answer.module+'模块'+file+'文件创建完毕。' + getNow());

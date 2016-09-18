@@ -6,3 +6,5 @@
 登陆  npm login
 发布  npm publish
 删除  npm unpublish ui-swiper@3.3.1  或者  npm unpublish --force ui-swiper
+
+npm缓存目录 C:\Users\swg\AppData\Roaming

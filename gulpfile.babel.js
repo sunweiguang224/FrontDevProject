@@ -146,7 +146,7 @@ gulp.task('task_js_dev', () => {
 			;
 	}
 	// common部分的js
-	deployDev(gulp.src(Path.src.js.common));
+  deployDev(gulp.src(Path.src.js.common));
 	// module部分的js
 	return deployDev(webpackCompileJs());
 });
@@ -182,7 +182,7 @@ function compileHtml(options){
   return gulp.src(options.src)
     .pipe(fileInclude({
       prefix: '@@',
-      basepath: __dirname + '/src/util/tpl/'
+      basepath: __dirname + '/src/common/tpl/html/'
     }))
     .pipe(replace('{{path}}', '../..'))
     .pipe(replace('{{min}}', options.compress))
@@ -220,18 +220,18 @@ gulp.task('default', [], () => {
 			// 监视html、模板变化
 			gulp.watch([
 				Path.src.html,
-				Path.srcRoot + '/util/**/*.html',
-				Path.srcRoot + '/util/**/*.tpl'
+				Path.srcRoot + '/common/**/*.html',
+				Path.srcRoot + '/common/**/*.tpl'
 			], ['task_html_dev']);
       // 监视css变化
 			gulp.watch([
 				Path.src.css,
-				Path.srcRoot + '/util/**/css/*.scss'
+				Path.srcRoot + '/common/**/css/*.scss'
 			], ['task_css_dev']);
       // 监视图片变化
 			gulp.watch([
 				Path.src.img,
-				Path.srcRoot + '/util/**/*.img'
+				Path.srcRoot + '/common/**/*.img'
 			], ['task_img_dev']);
       // 监视图标变化
 			gulp.watch([
@@ -242,8 +242,8 @@ gulp.task('default', [], () => {
       // 监视js、模板变化
 			gulp.watch([
 				Path.src.js.common,
-				Path.srcRoot + '/util/**/*.js',
-				Path.srcRoot + '/util/**/*.tpl',
+				Path.srcRoot + '/common/**/*.js',
+				Path.srcRoot + '/common/**/*.tpl',
 				Path.srcRoot + '/module/**/*.js',
 				Path.srcRoot + '/module/**/*.tpl'
 			], ['task_js_dev']);

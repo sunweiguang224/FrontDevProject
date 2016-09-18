@@ -7,14 +7,15 @@ import webpack from 'webpack';
 import glob from 'glob';
 
 //export default {		// 有bug 原因不明
+var commonModulePath = __dirname + '/src/common/js/util';
 module.exports = {
 	resolve: {
 		// 为公共资源指定别名，用的时候直接引用别名即可
 		alias: {
-			helper: __dirname + '/src/util/js/helper.js',
-      setting: __dirname + '/src/util/js/setting.js',
-      ua: __dirname + '/src/util/js/ua.js',
-      util: __dirname + '/src/util/js/util.js',
+			helper: commonModulePath + '/helper.js',
+      setting: commonModulePath + '/setting.js',
+      ua: commonModulePath + '/ua.js',
+      util: commonModulePath + '/util.js',
 		}
 	},
 	entry: function(path) {

@@ -1,6 +1,9 @@
 @charset "UTF-8";
-@import '../../util/css/lib/normalize';
-@import '../../util/css/util';
+@import './lib/_normalize';
+
+/*页面容器宽度*/
+$containerMaxWidth: 640px;
+$containerMinWidth: 320px;
 
 /*样式重置*/
 *{margin: 0;padding: 0;}

@@ -1,1 +1,1 @@
-<script>(function(){var a=window.designWidth;window.addEventListener("resize",(function(){var b=a||414;document.documentElement.style.fontSize=(document.documentElement.clientWidth/b)*100+"px";return arguments.callee})(),false);window.designWidth=null})();</script>
+<script>(function(){var a=window.designWidth;window.addEventListener("resize",(function(){var b=a||720;var c=document.documentElement.clientWidth;if(c>720){c=720}else{if(c<360){c=360}}document.documentElement.style.fontSize=(c/b)*100+"px";return arguments.callee})(),false);window.designWidth=null})();</script>

@@ -5,11 +5,11 @@
   @param {number} $line 文本行数.
 */
 @mixin ellipsis($line: 1) {
-  @if($line == 1){
+  @if ($line == 1) {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-  }@else{
+  } @else {
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -17,6 +17,7 @@
     -webkit-line-clamp: $line;
   }
 }
+
 /*
   功能：正方形
   @param {number} $length 边长.
@@ -25,6 +26,7 @@
   width: $length;
   height: $length;
 }
+
 /*
   功能：圆形
   @param {number} $length 边长.
@@ -33,14 +35,16 @@
   @include square($radius * 2);
   border-radius: $radius;
 }
+
 /*
   功能：单行文本垂直居中
   @param {number} $height 高度.
 */
-@mixin height($height){
+@mixin height($height) {
   height: $height;
   line-height: $height;
 }
+
 /*
   功能：盒阴影
   @param {number} $h 水平距离.
@@ -48,15 +52,16 @@
   @param {number} $blur 模糊距离.
   @param {number} $color 阴影颜色.
 */
-@mixin box-shadow($h:1px, $v:1px, $blur:1px, $color:black){
+@mixin box-shadow($h:1px, $v:1px, $blur:1px, $color:black) {
   box-shadow: $h $v $blur $color;
 }
+
 /*
   功能：点击动效
   @param {number} $selector 选择器.
 */
-@mixin click-effect($selector){
-  #{$selector}:active{
+@mixin click-effect($selector) {
+  #{$selector}:active {
     opacity: 0.8;
   }
 }
@@ -74,9 +79,9 @@
   }
 }
 
-@mixin mask($opacity: 0.2){
+@mixin mask($opacity: 0.2) {
   position: relative;
-  &:before{
+  &:before {
     position: absolute;
     top: 0;
     left: 0;
